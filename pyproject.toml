@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jarvis_leaderboard_uploader"
+version = "0.1.0"
+description = "Automate submitting results to the JARVIS Leaderboard"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [
+    { name = "Your Name", email = "you@example.com" },
+]
+keywords = ["jarvis", "materials-science", "leaderboard", "benchmarks"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "build",
+    "twine",
+]
+
+[project.scripts]
+jarvis-upload = "jarvis_leaderboard_uploader.cli:main"
+
+[project.urls]
+Homepage   = "https://github.com/YOUR_USERNAME/jarvis_leaderboard_uploader"
+Repository = "https://github.com/YOUR_USERNAME/jarvis_leaderboard_uploader"
+"Bug Tracker" = "https://github.com/YOUR_USERNAME/jarvis_leaderboard_uploader/issues"
+
+[tool.setuptools.packages.find]
+where   = ["."]
+include = ["jarvis_leaderboard_uploader*"]
+exclude = ["tests*", "*.egg-info"]
+
+[tool.pytest.ini_options]
+testpaths    = ["tests"]
+python_files = ["test_*.py"]
