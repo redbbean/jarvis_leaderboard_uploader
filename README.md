@@ -1,77 +1,146 @@
-# JARVIS Leaderboard Uploader
+# jarvis-leaderboard-uploader
 
-`jarvis-leaderboard-uploader` is a Python package and CLI for preparing JARVIS Leaderboard submissions from either an existing results CSV or an evaluation script.
+Automate submitting results to the JARVIS Leaderboard — from CSV validation to pull request.
 
-## Install
+---
+
+## Resources
+
+- JARVIS Leaderboard Guide: https://pages.nist.gov/jarvis_leaderboard/
+- JARVIS Repository: https://github.com/atomgptlab/jarvis_leaderboard
+- Uploader GitHub Repository: https://github.com/redbbean/jarvis_leaderboard_uploader
+
+---
+
+## What This Does
+
+Submitting to JARVIS manually requires:
+
+- Formatting CSVs exactly
+- Naming benchmarks correctly
+- Creating the right folder structure
+- Zipping files properly
+- Running validation scripts
+- Using git correctly
+
+This package automates all of that.
+
+---
+
+## Installation
 
 ```bash
 pip install jarvis_leaderboard_uploader
 ```
 
-## What it does
+---
 
-The package helps you:
+## Quick Start
 
-- validate benchmark names
-- check that your results CSV has the required `id` and `prediction` columns
-- validate metadata
-- package your submission into the expected contribution folder
-- optionally run an evaluation script before packaging
-- print the next pull request step after the contribution is created
+### Colab Notebook with more in detail examples coming soon!
 
-## Quick start
-
-Show benchmark name examples:
+### 1. Clone your fork of the JARVIS repo
 
 ```bash
-jarvis-upload help-benchmark
+git clone https://github.com/YOUR_USERNAME/jarvis_leaderboard
+cd jarvis_leaderboard
 ```
 
-Validate a CSV before submitting:
+---
+
+### 2. Prepare your predictions CSV
+
+Must look like:
+
+```text
+id,prediction
+sample1,0.5
+sample2,1.2
+```
+
+---
+
+### 3. Submit
 
 ```bash
-jarvis-upload validate   --benchmark "AI-SinglePropertyPrediction-formation_energy_peratom-dft_3d-test-mae"   --results_file predictions.csv
+jarvis-upload submit   --repo_path ./jarvis_leaderboard   --benchmark "AI-TextClass-mmlu_test_quiz-mmlu-test-acc"   --results_file predictions.csv   --contribution_name "my_model_v1"   --model_name "My Model"   --project_url "https://github.com/me/model"
 ```
 
-Submit from a CSV:
+---
+
+## What Happens Automatically
+
+- Validates benchmark format
+- Validates CSV structure
+- Validates metadata
+- Packages files into `.csv.zip`
+- Creates contribution folder
+- Runs `rebuild.py`
+- Commits and pushes to your fork
+- Prints PR link
+
+---
+
+## Validate Without Submitting
 
 ```bash
-jarvis-upload submit   --repo_path ./jarvis_leaderboard   --benchmark "AI-SinglePropertyPrediction-formation_energy_peratom-dft_3d-test-mae"   --contribution_name my_model_v1   --results_file predictions.csv   --model_name "MyModel"   --project_url "https://github.com/you/your-project"
+jarvis-upload validate   --benchmark "AI-TextClass-mmlu_test_quiz-mmlu-test-acc"   --results_file predictions.csv
 ```
 
-Submit by running a script:
+---
+
+## Using an Evaluation Script
+
+Instead of passing a CSV, you can run a script:
 
 ```bash
-jarvis-upload submit   --repo_path ./jarvis_leaderboard   --benchmark "AI-SinglePropertyPrediction-formation_energy_peratom-dft_3d-test-mae"   --contribution_name my_model_v1   --eval_script "python run_eval.py"   --script_output_csv predictions.csv   --model_name "MyModel"   --project_url "https://github.com/you/your-project"
+jarvis-upload submit   --repo_path ./jarvis_leaderboard   --benchmark "..."   --eval_script "python eval.py"   --script_output_csv results.csv   --contribution_name "my_model"   --model_name "My Model"   --project_url "https://github.com/me/model"
 ```
 
-## Required inputs
+---
 
-You need:
+## CLI Commands
 
-- a cloned fork of the `jarvis_leaderboard` repository
-- a benchmark name in the expected format
-- a results CSV with `id` and `prediction`
-- metadata supplied by either `--metadata_file` or `--model_name` plus `--project_url`
+| Command | Description |
+|--------|-------------|
+| `submit` | Full pipeline |
+| `validate` | Check inputs only |
+| `list` | Show existing contributions |
+| `help-benchmark` | Show naming format |
 
-## CLI commands
+---
 
-- `submit` — validate, package, commit, and push the contribution
-- `validate` — check a CSV and benchmark without writing files
-- `list` — list existing contribution folders in a local repo
-- `help-benchmark` — print benchmark format examples
+## Requirements
 
-## Example workflow
+- Python 3.8+
+- Git installed and configured
+- Fork of the JARVIS repository (main branch)
 
-1. Run your evaluation or prepare your CSV.
-2. Validate the file.
-3. Submit the contribution.
-4. Open the pull request that the CLI prints at the end.
+---
 
-## Project homepage
+## Common Errors
 
-For source code, development notes, and issue tracking, see the GitHub repository.
+- Wrong benchmark format
+- Missing `id` / `prediction` columns
+- Non-numeric predictions
+- Not working inside a forked repo
+
+The CLI will explain what went wrong and in which file. 
+
+### Feel free to checkout the [GitHub repo]()
+
+---
+
+## Goal
+
+Make JARVIS submissions:
+
+- Faster
+- Less error-prone
+- Easier to reproduce
+
+---
 
 ## License
 
-MIT
+MIT License
