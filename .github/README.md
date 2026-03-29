@@ -11,8 +11,9 @@ validate → package → commit → push → PR instructions
 
 - JARVIS Leaderboard Guide: https://pages.nist.gov/jarvis_leaderboard/
 - JARVIS Leaderboard Repository: https://github.com/atomgptlab/jarvis_leaderboard
+- Python Package (PyPI): Coming soon, need to do some more testing first. 
 
-These are the official references this project is built around.
+These are the official references related to this project. 
 
 ---
 
