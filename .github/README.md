@@ -1,126 +1,157 @@
-# JARVIS Leaderboard Uploader
+# jarvis_leaderboard_uploader
 
-A Python package and CLI for validating, packaging, and submitting JARVIS Leaderboard contributions from a local results CSV or an evaluation script. It helps automate the workflow from predictions to a contribution folder in a fork of the leaderboard repository.
+A Python package and CLI tool to automate submitting results to the JARVIS Leaderboard.
 
-## What this project does
+This tool handles the full workflow:
+validate → package → commit → push → PR instructions
 
-`jarvis-upload` helps you:
+---
 
-- validate a benchmark name, results CSV, and metadata
-- optionally run an evaluation script to generate predictions
-- package the required contribution files
-- commit and push the contribution to your fork
-- print pull request instructions for the final submission step
+## Related Resources
 
-## Why this exists
+- JARVIS Leaderboard Guide: https://pages.nist.gov/jarvis_leaderboard/
+- JARVIS Leaderboard Repository: https://github.com/atomgptlab/jarvis_leaderboard
 
-The JARVIS submission process involves several moving parts: benchmark naming, CSV formatting, metadata, repo structure, and git workflow. This tool brings those steps together so the process is easier to repeat and harder to get wrong.
+These are the official references this project is built around.
 
-## Installation
+---
+
+## Features
+
+- ✅ Benchmark name validation (strict format enforcement)
+- ✅ CSV validation (`id`, `prediction`)
+- ✅ Metadata validation
+- ✅ Script execution support (auto-generate CSVs)
+- ✅ Automatic packaging into `.csv.zip`
+- ✅ Git automation (add, commit, push)
+- ✅ Pull request instructions
+- ✅ Clean CLI (`jarvis-upload`)
+
+---
+
+## Installation (Development)
 
 ```bash
-pip install jarvis_leaderboard_uploader
-```
+git clone https://github.com/YOUR_USERNAME/jarvis_leaderboard_uploader
+cd jarvis_leaderboard_uploader
 
-For local development:
-
-```bash
 pip install -e .
 ```
 
-## Requirements
-
-- Python 3.8+
-- git
-- a cloned fork of the `jarvis_leaderboard` repository
-
-## Command-line usage
-
-Check the benchmark format:
+With dev tools:
 
 ```bash
-jarvis-upload help-benchmark
+pip install -e ".[dev]"
 ```
 
-List existing contributions in a repo:
+---
+
+## How It Works
+
+This package mirrors the manual JARVIS submission workflow:
+
+1. Validate benchmark name
+2. Validate predictions CSV
+3. Validate metadata
+4. Package files into correct structure
+5. Run `rebuild.py`
+6. Commit + push to your fork
+7. Guide you to open a PR
+
+---
+
+## CLI Usage
+
+### Colab Notebook with more in detail examples coming soon!
+
+### Submit (full pipeline)
+
+```bash
+jarvis-upload submit   --repo_path ./jarvis_leaderboard   --benchmark "AI-TextClass-mmlu_test_quiz-mmlu-test-acc"   --results_file predictions.csv   --contribution_name "my_model"   --model_name "My Model"   --project_url "https://github.com/me/model"
+```
+
+---
+
+### Validate only
+
+```bash
+jarvis-upload validate   --benchmark "AI-TextClass-mmlu_test_quiz-mmlu-test-acc"   --results_file predictions.csv
+```
+
+---
+
+### List contributions
 
 ```bash
 jarvis-upload list --repo_path ./jarvis_leaderboard
 ```
 
-Validate a results file without writing anything:
+---
+
+### Benchmark help
 
 ```bash
-jarvis-upload validate   --benchmark "AI-SinglePropertyPrediction-formation_energy_peratom-dft_3d-test-mae"   --results_file predictions.csv
+jarvis-upload help-benchmark
 ```
 
-Submit a contribution from an existing CSV:
+---
 
-```bash
-jarvis-upload submit   --repo_path ./jarvis_leaderboard   --benchmark "AI-SinglePropertyPrediction-formation_energy_peratom-dft_3d-test-mae"   --contribution_name my_model_v1   --results_file predictions.csv   --model_name "MyModel"   --project_url "https://github.com/you/your-project"
+## Project Structure
+
+```text
+jarvis_leaderboard_uploader/
+├── cli.py
+├── uploader.py
+├── validator.py
+├── runner.py
+├── packager.py
+├── git_helper.py
+├── logger.py
 ```
 
-Submit by running an evaluation script:
+---
 
-```bash
-jarvis-upload submit   --repo_path ./jarvis_leaderboard   --benchmark "AI-SinglePropertyPrediction-formation_energy_peratom-dft_3d-test-mae"   --contribution_name my_model_v1   --eval_script "python run_eval.py"   --script_output_csv predictions.csv   --model_name "MyModel"   --project_url "https://github.com/you/your-project"
-```
-
-## Expected inputs
-
-The uploader expects a CSV with two columns:
-
-- `id`
-- `prediction`
-
-It also expects either:
-
-- `--metadata_file path/to/metadata.json`, or
-- `--model_name` and `--project_url`
-
-Optional metadata fields include `team_name` and `date_submitted`.
-
-## Project structure
-
-The package is organized into small modules so the workflow is easier to understand and maintain:
-
-- `validator.py` checks benchmark names, CSV files, and metadata
-- `runner.py` handles evaluation scripts
-- `packager.py` creates the contribution folder and archive
-- `git_helper.py` manages git add / commit / push and PR guidance
-- `uploader.py` coordinates the full workflow
-- `cli.py` exposes the command-line interface
-
-## Notes from the project
-
-A few details in the upload guide and the repository did not line up exactly, so part of the work here was reconciling those differences and making the workflow more consistent.
-
-This project also taught me a lot about Python packaging. Building something for PyPI turned out to involve more moving pieces than I expected, including `pyproject.toml`, `MANIFEST.in`, package layout, and making sure the right files are included in the distribution.
-
-Other big takeaways were:
-
-- splitting the workflow across separate files makes the code easier to reason about
-- CLI design takes more thought than it first appears
-- working with CSV files cleanly matters a lot for validation and reproducibility
-- staying on top of version control is essential, especially on a project that evolves over time
-
-## Running tests
+## Running Tests
 
 ```bash
 pytest tests/ -v
 ```
 
-## Building the package
+---
 
-```bash
-python -m build
-twine check dist/*
-```
+## Notes on JARVIS Workflow
+
+While building this tool, I noticed a few inconsistencies between:
+
+- The official JARVIS guide
+- The actual repository structure / expectations
+
+This tool is designed to bridge that gap and make submissions more reliable.
+
+---
+
+## What I Learned
+
+This project ended up being much more involved than expected, especially around:
+
+- Building a proper Python package
+  - `pyproject.toml`, `MANIFEST.in`, packaging structure
+- Structuring a multi-file system cleanly
+- Designing a CLI with `argparse`
+- Working with CSVs in general
+
+One big takeaway: Stay disciplined with version control!
+
+---
 
 ## Contributing
 
-Issues and pull requests are welcome. If you are working on the leaderboard repo itself, keep the contribution folder structure and benchmark naming rules consistent with the upstream guide.
+PRs and suggestions are welcome.
+
+If you find bugs or edge cases (especially with new benchmarks), feel free to open an issue.
+
+---
 
 ## License
 
-MIT
+MIT License
