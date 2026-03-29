@@ -54,6 +54,8 @@ def _add_common_args(p: argparse.ArgumentParser) -> None:
     meta.add_argument("--model_name")
     p.add_argument("--project_url")
     p.add_argument("--verbose", action="store_true", default=True)
+    p.add_argument("--team_name", help="Your team or personal name")
+    p.add_argument("--date_submitted", help="Submission date in YYYY-MM-DD format")
 
 
 def _add_submission_args(p: argparse.ArgumentParser) -> None:
@@ -111,7 +113,18 @@ def main(argv=None) -> int:
             else:
                 if not args.project_url:
                     parser.error("--project_url is required when --model_name is used.")
-                metadata = {"model_name": args.model_name, "project_url": args.project_url}
+                metadata = {
+                    "model_name": args.model_name,
+                    "project_url": args.project_url,
+                }
+                if args.team_name:
+                    metadata["team_name"] = args.team_name
+                if args.date_submitted:
+                    metadata["date_submitted"] = args.date_submitted
+                else:
+                    # Default to today's date if not provided
+                    import datetime
+                    metadata["date_submitted"] = datetime.date.today().isoformat()
 
             uploader = JarvisUploader(repo_path=args.repo_path, verbose=args.verbose)
             uploader.submit(
