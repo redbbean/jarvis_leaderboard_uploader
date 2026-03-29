@@ -9,7 +9,7 @@ validate → package → commit → push → PR instructions
 
 ## Related Resources
 
-- JARVIS Leaderboard Guide: https://pages.nist.gov/jarvis_leaderboard/
+- JARVIS Leaderboard Guide: https://atomgptlab.github.io/jarvis_leaderboard/
 - JARVIS Leaderboard Repository: https://github.com/atomgptlab/jarvis_leaderboard
 - Python Package (PyPI): Coming soon, need to do some more testing first. 
 
